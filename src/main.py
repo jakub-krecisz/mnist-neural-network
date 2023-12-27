@@ -1,6 +1,6 @@
 from neural_network import Layer, NeuralNetwork
 from src.data_loader import MNISTDataLoader
-from activations import linear_activation, tanh, softmax
+from activations import linear_fun, tanh_fun, softmax_fun
 
 def main():
     # Initialize MNISTDataLoader
@@ -9,23 +9,24 @@ def main():
     custom_loader.normalize_datasets()
 
     # Define the architecture of the neural network
-    input_layer = Layer(num_neurons=784, activation_function=linear_activation)
-    hidden_layer = Layer(num_neurons=128, activation_function=tanh)
-    output_layer = Layer(num_neurons=10, activation_function=softmax)
 
-    layers = [input_layer, hidden_layer, output_layer]
+    layers = [
+        Layer(num_neurons=784, function=linear_fun),
+        Layer(num_neurons=128, function=tanh_fun),
+        Layer(num_neurons=10, function=softmax_fun)
+    ]
 
     # Initialize NeuralNetwork
     neural_network = NeuralNetwork(layers=layers, loader=custom_loader)
 
     # Train the neural network
-    epochs = 10
-    learning_rate = 0.1
-    neural_network.train(epochs=epochs, learning_rate=learning_rate)
+    epochs = 2
+    learning_rate = 0.001
+    neural_network.train(epochs=epochs, batch_size=16, learning_rate=learning_rate)
 
-    # Evaluate the performance on the test dataset
-    accuracy = neural_network.evaluate()
-    print(f"Accuracy on the test dataset: {accuracy * 100:.2f}%")
+    # # Evaluate the performance on the test dataset
+    # accuracy = neural_network.evaluate()
+    # print(f"Accuracy on the test dataset: {accuracy * 100:.2f}%")
 
 
 if __name__ == '__main__':
