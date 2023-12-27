@@ -7,8 +7,8 @@ from typing import Optional, Tuple
 from keras.datasets import mnist
 
 
-class MNISTDataHandler:
-    """ Handler for handling MNIST dataset, including loading from keras datasets or local CSV files."""
+class MNISTDataLoader:
+    """ Loader for handling MNIST dataset, including loading from keras datasets or local CSV files."""
     def __init__(self, train_path: str, test_path: str):
         self._train_filename = None
         self._test_filename = None
@@ -147,8 +147,8 @@ class Dataset:
         """
         Normalize the input data.
 
-        :param mean: Mean value for normalization.
-        :param std: Standard deviation value for normalization.
+        :param mean: Mean value.
+        :param std: Standard deviation value.
         """
         self.inputs = (self.inputs - mean) / std
 
