@@ -81,8 +81,8 @@ class MNISTDataLoader:
 
             self.train_dataset = Dataset.from_csv(train_filepath)
             self.test_dataset = Dataset.from_csv(test_filepath)
-        except FileNotFoundError:
-            raise FileNotFoundError("One or both of the CSV files not found.")
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"CSV file not found: {e.filename}")
 
     def save_datasets(self) -> None:
         """
