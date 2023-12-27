@@ -7,8 +7,8 @@ from typing import Optional, Tuple
 from keras.datasets import mnist
 
 
-class MNISTDataLoader:
-    """ Loader for handling MNIST dataset, including loading from keras datasets or local CSV files."""
+class MNISTDataHandler:
+    """ Handler for handling MNIST dataset, including loading from keras datasets or local CSV files."""
     def __init__(self, train_path: str, test_path: str):
         self._train_filename = None
         self._test_filename = None
@@ -102,6 +102,19 @@ class MNISTDataLoader:
         else:
             raise ValueError("Train and test dataset is not initialized. Use load_mnist_data() firstly.")
 
+    def normalize_datasets(self, mean: float = 0.1307, std: float = 0.3081) -> None:
+        """
+        Normalize both train and test datasets.
+
+        :param mean: Mean value for normalization.
+        :param std: Standard deviation value for normalization.
+        """
+        if self.train_dataset is not None and self.test_dataset is not None:
+            self.train_dataset.normalize(mean=mean, std=std)
+            self.test_dataset.normalize(mean=mean, std=std)
+        else:
+            raise ValueError("Train and test datasets are not initialized. Use load_mnist_data() firstly.")
+
 
 class Dataset:
     """ Representation of a dataset with inputs and labels. """
@@ -129,6 +142,15 @@ class Dataset:
             columns=['label'] + [f'pixel_{i}' for i in range(flat_inputs.shape[1])]
         )
         return df
+
+    def normalize(self, mean: float = 0.1307, std: float = 0.3081) -> None:
+        """
+        Normalize the input data.
+
+        :param mean: Mean value for normalization.
+        :param std: Standard deviation value for normalization.
+        """
+        self.inputs = (self.inputs - mean) / std
 
     @classmethod
     def from_csv(cls, filepath) -> 'Dataset':
