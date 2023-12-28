@@ -47,19 +47,19 @@ def linear_derivative(x):
     return 1.0
 
 
-def softmax(x_vec):
-    """The Softmax function."""
-    e_x = np.exp(x_vec - np.max(x_vec))
-    return e_x / e_x.sum(axis=0)
+def softmax(x):
+    """The Softmax activation function."""
+    exp_x = np.exp(x - np.max(x))
+    return exp_x / np.sum(exp_x)
 
-def softmax_derivative(x_vec):
+def softmax_derivative(x):
     """The derivative of the Softmax function."""
-    s = softmax(x_vec)
+    s = softmax(x)
     return np.diagflat(s) - np.outer(s, s)
 
 
 softmax_fun = ActivationFunction(function=softmax, derivative=softmax_derivative)
 linear_fun = ActivationFunction(function=linear, derivative=linear_derivative)
-sigmoid_function = ActivationFunction(function=sigmoid, derivative=sigmoid_derivative)
+sigmoid_fun = ActivationFunction(function=sigmoid, derivative=sigmoid_derivative)
 tanh_fun = ActivationFunction(function=tanh, derivative=tanh_derivative)
-relu_function = ActivationFunction(function=relu, derivative=relu_derivative)
+relu_fun = ActivationFunction(function=relu, derivative=relu_derivative)
