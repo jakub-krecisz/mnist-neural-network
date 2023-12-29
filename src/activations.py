@@ -29,7 +29,7 @@ def tanh_derivative(x):
 
 def relu(x):
     """The ReLU function."""
-    return np.maximum(0, x)
+    return np.maximum(x, 0)
 
 
 def relu_derivative(x):
@@ -49,8 +49,7 @@ def linear_derivative(x):
 
 def softmax(x):
     """The Softmax activation function."""
-    exp_x = np.exp(x - np.max(x))
-    return exp_x / np.sum(exp_x)
+    return np.exp(x) / sum(np.exp(x))
 
 def softmax_derivative(x):
     """The derivative of the Softmax function."""
