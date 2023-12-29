@@ -15,7 +15,7 @@ class Layer:
         self.delta_weights = None
         self.delta_biases = None
 
-class NeuralNetwork(object):
+class MNISTNeuralNetwork(object):
     def __init__(self, layers: List[Layer], loader: MNISTDataLoader):
         self.num_of_layers = len(layers)
         self.sizes = tuple(layer.num_neurons for layer in layers)

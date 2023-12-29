@@ -1,4 +1,4 @@
-from neural_network import Layer, NeuralNetwork
+from neural_network import Layer, MNISTNeuralNetwork
 from src.data_loader import MNISTDataLoader
 from activations import linear_fun, softmax_fun, relu_fun
 
@@ -14,7 +14,7 @@ def main():
         Layer(num_neurons=10, function=softmax_fun)
     ]
 
-    neural_network = NeuralNetwork(layers=layers, loader=custom_loader)
+    neural_network = MNISTNeuralNetwork(layers=layers, loader=custom_loader)
 
     epochs = 500
     learning_rate = 0.1
