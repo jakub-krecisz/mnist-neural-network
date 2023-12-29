@@ -1,6 +1,6 @@
 from neural_network import Layer, MNISTNeuralNetwork
 from src.data_loader import MNISTDataLoader
-from activations import linear_fun, softmax_fun, relu_fun
+from activations import linear_fun, softmax_fun, relu_fun, tanh_fun
 
 
 def main():
@@ -10,15 +10,19 @@ def main():
 
     layers = [
         Layer(num_neurons=784, function=linear_fun),
-        Layer(num_neurons=10, function=relu_fun),
+        Layer(num_neurons=400, function=relu_fun),
+        Layer(num_neurons=150, function=tanh_fun),
         Layer(num_neurons=10, function=softmax_fun)
     ]
 
     neural_network = MNISTNeuralNetwork(layers=layers, loader=custom_loader)
 
-    epochs = 500
-    learning_rate = 0.1
-    neural_network.train(epochs=epochs, batch_size=60000, learning_rate=learning_rate)
+    epochs = 10
+    learning_rate = 0.01
+    neural_network.train(epochs=epochs, batch_size=16, learning_rate=learning_rate)
+    test_accuracy = neural_network.evaluate()
+
+    print(f"Test accuracy, tested on 10k samples: {test_accuracy}")
 
 
 if __name__ == '__main__':
