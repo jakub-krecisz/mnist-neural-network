@@ -15,6 +15,7 @@ class Layer:
         self.delta_weights = None
         self.delta_biases = None
 
+
 class MNISTNeuralNetwork(object):
     def __init__(self, layers: List[Layer], loader: MNISTDataLoader):
         self.num_of_layers = len(layers)
@@ -45,7 +46,6 @@ class MNISTNeuralNetwork(object):
         return layer_outputs[-1]
 
     def train(self, epochs: int, batch_size: int, learning_rate: float):
-        global output, batch_labels
         total_samples = len(self.data_loader.train_dataset.inputs)
 
         for epoch in range(epochs):
@@ -58,17 +58,17 @@ class MNISTNeuralNetwork(object):
                 batch_labels = labels_shuffled[i:i + batch_size]
 
                 output = self.forward_propagation(batch_inputs)
-                self.backward_propagation(output, batch_labels)
+                self.backward_propagation(output, batch_labels, total_samples)
                 self.update_weights_and_biases(learning_rate)
 
-            if epoch % 50 == 0:
+            if epoch % 10 == 0:
                 print("Iteration: ", epoch)
                 predictions = self.get_predictions(output)
-                print("Accuracy:", self.get_accuracy(predictions, batch_labels))
+                accuracy = self.get_accuracy(predictions, batch_labels)
+                print("Accuracy:", accuracy)
 
-    def backward_propagation(self, output_, batch_labels):
-        total_samples = len(self.data_loader.train_dataset.inputs)
-        delta_output = output_ - self.one_hot(batch_labels)
+    def backward_propagation(self, output, batch_labels, total_samples):
+        delta_output = output - self.one_hot(batch_labels)
 
         for i in range(self.num_of_layers - 1, 0, -1):
             a_prev = self.layers[i - 1].activation_function.function(self.layers[i - 1].z)
@@ -91,17 +91,11 @@ class MNISTNeuralNetwork(object):
             self.layers[i].delta_biases = None
 
     @staticmethod
-    def mean_sq_error(output_: np.ndarray, labels: np.ndarray) -> float:
-        return np.mean((output_ - labels) ** 2)
+    def mean_sq_error(output, labels: np.ndarray) -> float:
+        return np.mean((output - labels) ** 2)
 
     @staticmethod
     def one_hot(labels: np.ndarray) -> np.ndarray:
-        """
-        Convert integer labels to one-hot encoded format.
-
-        :param labels: Integer labels.
-        :return: One-hot encoded labels.
-        """
         one_hot_labels = np.eye(10)[labels].T
         return one_hot_labels
 
