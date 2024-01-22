@@ -2,9 +2,25 @@ import numpy as np
 
 
 class ActivationFunction:
-    def __init__(self, function, derivative):
+    def __init__(self, name, function, derivative):
+        self.name = name
         self.function = function
         self.derivative = derivative
+
+    @classmethod
+    def get_function_by_name(cls, function_name):
+        functions = {
+            'sigmoid': sigmoid_fun,
+            'tanh': tanh_fun,
+            'relu': relu_fun,
+            'linear': linear_fun,
+            'softmax': softmax_fun,
+        }
+
+        if function_name in functions:
+            return functions[function_name]
+        else:
+            raise ValueError(f"Activation function '{function_name}' not supported.")
 
 
 def sigmoid(x):
@@ -57,8 +73,8 @@ def softmax_derivative(x):
     return np.diagflat(s) - np.outer(s, s)
 
 
-softmax_fun = ActivationFunction(function=softmax, derivative=softmax_derivative)
-linear_fun = ActivationFunction(function=linear, derivative=linear_derivative)
-sigmoid_fun = ActivationFunction(function=sigmoid, derivative=sigmoid_derivative)
-tanh_fun = ActivationFunction(function=tanh, derivative=tanh_derivative)
-relu_fun = ActivationFunction(function=relu, derivative=relu_derivative)
+softmax_fun = ActivationFunction(name='softmax', function=softmax, derivative=softmax_derivative)
+linear_fun = ActivationFunction(name='linear', function=linear, derivative=linear_derivative)
+sigmoid_fun = ActivationFunction(name='sigmoid', function=sigmoid, derivative=sigmoid_derivative)
+tanh_fun = ActivationFunction(name='tanh', function=tanh, derivative=tanh_derivative)
+relu_fun = ActivationFunction(name='relu', function=relu, derivative=relu_derivative)
