@@ -1,3 +1,4 @@
+import csv
 import numpy as np
 
 from typing import List
@@ -106,3 +107,50 @@ class MNISTNeuralNetwork(object):
     @staticmethod
     def get_accuracy(predictions, batch_labels):
         return np.sum(predictions == batch_labels) / batch_labels.size
+
+    @classmethod
+    def save_model(cls, model, path):
+        with open(path, 'w', newline='') as file:
+            writer = csv.writer(file)
+
+            for layer in model.layers:
+                writer.writerow(["Layer", layer.num_neurons])
+                writer.writerow(["ActivationFunction", layer.activation_function.name])
+                if layer.weights is not None:
+                    writer.writerow(["Weights"] + layer.weights.flatten().tolist())
+                if layer.biases is not None:
+                    writer.writerow(["Biases"] + layer.biases.flatten().tolist())
+
+    # @classmethod
+    # def load_model(cls, path, loader: MNISTDataLoader):
+    #     layers = []
+    #     current_layer = None
+    #
+    #     with open(path, 'r') as file:
+    #         reader = csv.reader(file)
+    #         for row in reader:
+    #             if row[0] == "Layer":
+    #                 # Create a new layer
+    #                 num_neurons = int(row[1])
+    #                 function_name = next(reader)[1]
+    #                 activation_function = ActivationFunction.get_function_by_name(function_name)
+    #                 current_layer = Layer(num_neurons, activation_function)
+    #
+    #             elif row[0] == "Weights":
+    #                 # Load weights for the current layer
+    #                 current_layer.weights = np.array([float(x) for x in row[1:]]).reshape(current_layer.weights.shape)
+    #
+    #             elif row[0] == "Biases":
+    #                 # Load biases for the current layer
+    #                 current_layer.biases = np.array([float(x) for x in row[1:]]).reshape(current_layer.biases.shape)
+    #
+    #                 # Add the current layer to the list of layers
+    #                 layers.append(current_layer)
+    #
+    #     # The first layer should not have biases or weights
+    #     layers[0].biases = None
+    #     layers[0].weights = None
+    #
+    #     # Create the model with the loaded layers and set the data loader
+    #     loaded_model = cls(layers, loader)
+    #     return loaded_model

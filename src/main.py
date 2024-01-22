@@ -20,9 +20,12 @@ def main():
     epochs = 10
     learning_rate = 0.01
     neural_network.train(epochs=epochs, batch_size=16, learning_rate=learning_rate)
-    test_accuracy = neural_network.evaluate()
+    print(f"Test accuracy: {(test_accuracy := neural_network.evaluate())}")
+    MNISTNeuralNetwork.save_model(neural_network, f'../models/trained_model_{test_accuracy * 100:.0f}_acc.csv')
 
-    print(f"Test accuracy, tested on 10k samples: {test_accuracy}")
+    # loaded_model = MNISTNeuralNetwork.load_model('../models/trained_model_89_acc.csv', custom_loader)
+    # test_accuracy_loaded_model = loaded_model.evaluate()
+    # print(f"Test accuracy, tested on 10k samples on loaded model: {test_accuracy_loaded_model}")
 
 
 if __name__ == '__main__':
