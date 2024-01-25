@@ -1,6 +1,6 @@
 from neural_network import Layer, MNISTNeuralNetwork
 from src.data_loader import MNISTDataLoader
-from activations import linear_fun, softmax_fun, relu_fun, tanh_fun
+from activations import linear, softmax, relu, tanh
 
 
 def main():
@@ -9,10 +9,10 @@ def main():
     custom_loader.normalize_datasets(mean=0.0, std=255.)
 
     layers = [
-        Layer(num_neurons=784, function=linear_fun),
-        Layer(num_neurons=400, function=relu_fun),
-        Layer(num_neurons=150, function=tanh_fun),
-        Layer(num_neurons=10, function=softmax_fun)
+        Layer(num_neurons=784, function=linear),
+        Layer(num_neurons=400, function=relu),
+        Layer(num_neurons=150, function=tanh),
+        Layer(num_neurons=10, function=softmax)
     ]
 
     neural_network = MNISTNeuralNetwork(layers=layers, loader=custom_loader)

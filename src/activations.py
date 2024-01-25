@@ -10,11 +10,11 @@ class ActivationFunction:
     @classmethod
     def get_function_by_name(cls, function_name):
         functions = {
-            'sigmoid': sigmoid_fun,
-            'tanh': tanh_fun,
-            'relu': relu_fun,
-            'linear': linear_fun,
-            'softmax': softmax_fun,
+            'sigmoid': sigmoid,
+            'tanh': tanh,
+            'relu': relu,
+            'linear': linear,
+            'softmax': softmax,
         }
 
         if function_name in functions:
@@ -23,58 +23,58 @@ class ActivationFunction:
             raise ValueError(f"Activation function '{function_name}' not supported.")
 
 
-def sigmoid(x):
+def _sigmoid(x):
     """The sigmoid function."""
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def sigmoid_derivative(x):
+def _sigmoid_derivative(x):
     """The derivative of the sigmoid function."""
-    return sigmoid(x) * (1 - sigmoid(x))
+    return _sigmoid(x) * (1 - _sigmoid(x))
 
 
-def tanh(x):
+def _tanh(x):
     """The hyperbolic tangent (tanh) function."""
     return np.tanh(x)
 
 
-def tanh_derivative(x):
+def _tanh_derivative(x):
     """The derivative of the hyperbolic tangent (tanh) function."""
     return 1 - np.tanh(x) ** 2
 
 
-def relu(x):
+def _relu(x):
     """The ReLU function."""
     return np.maximum(x, 0)
 
 
-def relu_derivative(x):
+def _relu_derivative(x):
     """The derivative of the ReLU function."""
     return np.where(x > 0, 1, 0)
 
 
-def linear(x):
+def _linear(x):
     """The linear activation function."""
     return x
 
 
-def linear_derivative(x):
+def _linear_derivative(x):
     """The derivative of the linear activation function."""
     return 1.0
 
 
-def softmax(x):
+def _softmax(x):
     """The Softmax activation function."""
     return np.exp(x) / sum(np.exp(x))
 
-def softmax_derivative(x):
+def _softmax_derivative(x):
     """The derivative of the Softmax function."""
-    s = softmax(x)
+    s = _softmax(x)
     return np.diagflat(s) - np.outer(s, s)
 
 
-softmax_fun = ActivationFunction(name='softmax', function=softmax, derivative=softmax_derivative)
-linear_fun = ActivationFunction(name='linear', function=linear, derivative=linear_derivative)
-sigmoid_fun = ActivationFunction(name='sigmoid', function=sigmoid, derivative=sigmoid_derivative)
-tanh_fun = ActivationFunction(name='tanh', function=tanh, derivative=tanh_derivative)
-relu_fun = ActivationFunction(name='relu', function=relu, derivative=relu_derivative)
+softmax = ActivationFunction(name='softmax', function=_softmax, derivative=_softmax_derivative)
+linear = ActivationFunction(name='linear', function=_linear, derivative=_linear_derivative)
+sigmoid = ActivationFunction(name='sigmoid', function=_sigmoid, derivative=_sigmoid_derivative)
+tanh = ActivationFunction(name='tanh', function=_tanh, derivative=_tanh_derivative)
+relu = ActivationFunction(name='relu', function=_relu, derivative=_relu_derivative)
