@@ -19,7 +19,7 @@ def main():
 
     epochs = 10
     learning_rate = 0.01
-    neural_network.train(epochs=epochs, batch_size=16, learning_rate=learning_rate)
+    neural_network.train(epochs=epochs, batch_size=16, decay_rate=0.9, learning_rate=learning_rate)
     print(f"Test accuracy: {(test_accuracy := neural_network.evaluate())}")
     MNISTNeuralNetwork.save_model(neural_network, f'../models/trained_model_{test_accuracy * 100:.0f}_acc.csv')
 

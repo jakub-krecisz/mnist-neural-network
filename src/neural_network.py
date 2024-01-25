@@ -46,7 +46,7 @@ class MNISTNeuralNetwork(object):
         self.layers[0].z = layer_outputs[0]
         return layer_outputs[-1]
 
-    def train(self, epochs: int, batch_size: int, learning_rate: float):
+    def train(self, epochs: int, batch_size: int, learning_rate: float, decay_rate: float = 1.0, log_interval=100):
         total_samples = len(self.data_loader.train_dataset.inputs)
 
         for epoch in range(epochs):
@@ -62,10 +62,10 @@ class MNISTNeuralNetwork(object):
                 self.backward_propagation(output, batch_labels, len(batch_inputs))
                 self.update_weights_and_biases(learning_rate)
 
-            print("Epoch: ", epoch)
-            predictions = self.get_predictions(output)
-            accuracy = self.get_accuracy(predictions, batch_labels)
-            print("Batch accuracy:", accuracy)
+                if (i / batch_size) % log_interval == 0:
+                    print("Epoch: {} | Iteration: {} | Accuracy: {}".format(epoch, i, self.evaluate(1000)))
+
+            learning_rate *= decay_rate
 
     def backward_propagation(self, output, batch_labels, total_samples):
         delta_output = output - self.one_hot(batch_labels)
@@ -90,10 +90,18 @@ class MNISTNeuralNetwork(object):
             self.layers[i].delta_weights = None
             self.layers[i].delta_biases = None
 
-    def evaluate(self):
-        output = self.forward_propagation(self.data_loader.test_dataset.inputs)
+    def evaluate(self, num_of_samples=20000, random=True):
+        test_inputs = self.data_loader.test_dataset.inputs[:num_of_samples]
+        test_labels = self.data_loader.test_dataset.labels[:num_of_samples]
+
+        if random:
+            indices = np.random.permutation(num_of_samples)
+            test_inputs = test_inputs[indices]
+            test_labels = test_labels[indices]
+
+        output = self.forward_propagation(test_inputs)
         prediction = self.get_predictions(output)
-        return self.get_accuracy(prediction, self.data_loader.test_dataset.labels)
+        return self.get_accuracy(prediction, test_labels)
 
     @staticmethod
     def one_hot(labels: np.ndarray) -> np.ndarray:
