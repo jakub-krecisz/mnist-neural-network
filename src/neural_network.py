@@ -18,12 +18,12 @@ class Layer:
 
 
 class MNISTNeuralNetwork(object):
-    def __init__(self, layers: List[Layer], loader: MNISTDataLoader):
+    def __init__(self, layers: List[Layer], loader: MNISTDataLoader, init_weights_n_biases=True):
         self.num_of_layers = len(layers)
         self.sizes = tuple(layer.num_neurons for layer in layers)
         self.data_loader = loader
         self.layers = layers
-        self._initialize_weights_and_biases()
+        self._initialize_weights_and_biases() if init_weights_n_biases else None
 
     def _initialize_weights_and_biases(self):
         for i in range(1, self.num_of_layers):
