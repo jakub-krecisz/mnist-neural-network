@@ -125,6 +125,9 @@ class Dataset:
     def __repr__(self) -> str:
         return f"Dataset(inputs shape={self.inputs.shape}, labels shape={self.labels.shape})"
 
+    def __len__(self) -> int:
+        return len(self.inputs)
+
     @property
     def shape(self) -> Tuple[Tuple, Tuple]:
         return self.inputs.shape, self.labels.shape
