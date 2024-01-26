@@ -98,7 +98,7 @@ class MNISTNeuralNetwork(object):
         test_labels = self.data_loader.test_dataset.labels[:num_of_samples]
 
         if random:
-            indices = np.random.permutation(num_of_samples)
+            indices = np.random.permutation(len(test_inputs))
             test_inputs = test_inputs[indices]
             test_labels = test_labels[indices]
 
