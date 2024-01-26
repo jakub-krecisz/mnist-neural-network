@@ -90,7 +90,10 @@ class MNISTNeuralNetwork(object):
             self.layers[i].delta_weights = None
             self.layers[i].delta_biases = None
 
-    def evaluate(self, num_of_samples=20000, random=True):
+    def evaluate(self, num_of_samples=None, random=True):
+        if num_of_samples is None:
+            num_of_samples = len(self.data_loader.test_dataset)
+
         test_inputs = self.data_loader.test_dataset.inputs[:num_of_samples]
         test_labels = self.data_loader.test_dataset.labels[:num_of_samples]
 
