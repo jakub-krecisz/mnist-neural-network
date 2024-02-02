@@ -48,6 +48,7 @@ class MNISTNeuralNetwork(object):
 
     def train(self, epochs: int, batch_size: int, learning_rate: float, decay_rate: float = 1.0, log_interval=100):
         total_samples = len(self.data_loader.train_dataset.inputs)
+        accumulated_err = 0.
 
         for epoch in range(epochs):
             indices = np.random.permutation(total_samples)
@@ -63,7 +64,11 @@ class MNISTNeuralNetwork(object):
                 self.update_weights_and_biases(learning_rate)
 
                 if (i / batch_size) % log_interval == 0:
-                    print("Epoch: {} | Iteration: {} | Accuracy: {}".format(epoch, i, self.evaluate(1000)))
+                    accuracy = self.evaluate(1000)
+                    accumulated_err += self.calculate_error(output, batch_labels)
+                    average_error = accumulated_err / ((i // batch_size) + 1)
+                    print("Epoch: {} | Iteration: {:<5} | Accuracy: {:<5} | Error: {:<10.5f}"
+                          .format(epoch, i, accuracy, average_error))
 
             learning_rate *= decay_rate
 
@@ -74,7 +79,7 @@ class MNISTNeuralNetwork(object):
             a_prev = self.layers[i - 1].activation_function.function(self.layers[i - 1].z)
 
             delta_weights = 1 / total_samples * np.dot(delta_output, a_prev.T)
-            delta_biases = 1 / total_samples * np.sum(delta_output)     # axis=1, keepdims=True
+            delta_biases = 1 / total_samples * np.sum(delta_output)  # axis=1, keepdims=True
 
             delta_output = (np.dot(self.layers[i].weights.T, delta_output) *
                             self.layers[i - 1].activation_function.derivative(self.layers[i - 1].z))
@@ -105,6 +110,12 @@ class MNISTNeuralNetwork(object):
         output = self.forward_propagation(test_inputs)
         prediction = self.get_predictions(output)
         return self.get_accuracy(prediction, test_labels)
+
+    def calculate_error(self, output, labels):
+        epsilon = 1e-15
+
+        error = -1 / labels.size * np.sum(self.one_hot(labels) * np.log(output + epsilon))
+        return error
 
     @staticmethod
     def one_hot(labels: np.ndarray) -> np.ndarray:
