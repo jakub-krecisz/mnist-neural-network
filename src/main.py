@@ -4,7 +4,7 @@ from activations import linear, softmax, relu, tanh
 
 
 def main():
-    custom_loader = MNISTDataLoader(train_path="../data/train", test_path="../data/test")
+    custom_loader = MNISTDataLoader(train_fpath="../data/train", test_fpath="../data/test")
     custom_loader.load_mnist_data(use_local=True)
     custom_loader.normalize_datasets(mean=0.0, std=255.)
 

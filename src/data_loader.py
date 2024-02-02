@@ -9,11 +9,11 @@ from keras.datasets import mnist
 
 class MNISTDataLoader:
     """ Loader for handling MNIST dataset, including loading from keras datasets or local CSV files."""
-    def __init__(self, train_path: str, test_path: str):
+    def __init__(self, train_fpath: str, test_fpath: str):
         self._train_filename = None
         self._test_filename = None
-        self._train_path = train_path
-        self._test_path = test_path
+        self._train_path = train_fpath
+        self._test_path = test_fpath
         self.train_dataset = None
         self.test_dataset = None
         self.set_default_filenames()
