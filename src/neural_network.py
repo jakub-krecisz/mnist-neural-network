@@ -138,41 +138,29 @@ class MNISTNeuralNetwork(object):
             for layer in model.layers:
                 writer.writerow(["Layer", layer.num_neurons])
                 writer.writerow(["ActivationFunction", layer.activation_function.name])
-                if layer.weights is not None:
-                    writer.writerow(["Weights"] + layer.weights.flatten().tolist())
-                if layer.biases is not None:
-                    writer.writerow(["Biases"] + layer.biases.flatten().tolist())
+                writer.writerow(
+                    ["Weights"] + (layer.weights.flatten().tolist() if layer.weights is not None else ['-']))
+                writer.writerow(["Biases"] + (layer.biases.flatten().tolist() if layer.biases is not None else ['-']))
 
-    # @classmethod
-    # def load_model(cls, path, loader: MNISTDataLoader):
-    #     layers = []
-    #     current_layer = None
-    #
-    #     with open(path, 'r') as file:
-    #         reader = csv.reader(file)
-    #         for row in reader:
-    #             if row[0] == "Layer":
-    #                 # Create a new layer
-    #                 num_neurons = int(row[1])
-    #                 function_name = next(reader)[1]
-    #                 activation_function = ActivationFunction.get_function_by_name(function_name)
-    #                 current_layer = Layer(num_neurons, activation_function)
-    #
-    #             elif row[0] == "Weights":
-    #                 # Load weights for the current layer
-    #                 current_layer.weights = np.array([float(x) for x in row[1:]]).reshape(current_layer.weights.shape)
-    #
-    #             elif row[0] == "Biases":
-    #                 # Load biases for the current layer
-    #                 current_layer.biases = np.array([float(x) for x in row[1:]]).reshape(current_layer.biases.shape)
-    #
-    #                 # Add the current layer to the list of layers
-    #                 layers.append(current_layer)
-    #
-    #     # The first layer should not have biases or weights
-    #     layers[0].biases = None
-    #     layers[0].weights = None
-    #
-    #     # Create the model with the loaded layers and set the data loader
-    #     loaded_model = cls(layers, loader)
-    #     return loaded_model
+    @classmethod
+    def load_model(cls, path, loader: MNISTDataLoader):
+        layers = []
+
+        with open(path, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[0] == "Layer":
+                    num_neurons = int(row[1])
+                    function = ActivationFunction.get_function_by_name(next(reader)[1])
+                    weights = next(reader)[1:]
+                    biases = next(reader)[1:]
+
+                    weights_formatted = np.array(list(map(float, weights))).reshape((num_neurons, layers[-1].num_neurons)) if weights != ['-'] else None
+                    biases_formatted = np.array(list(map(float, biases))) if biases != ['-'] else None
+
+                    current_layer = Layer(num_neurons, function)
+                    current_layer.biases = biases_formatted
+                    current_layer.weights = weights_formatted
+
+                    layers.append(current_layer)
+        return cls(layers, loader, init_weights_n_biases=False)
