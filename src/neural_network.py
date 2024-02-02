@@ -1,9 +1,9 @@
 import csv
-import numpy as np
 
 from typing import List
 from data_loader import MNISTDataLoader
 from activations import ActivationFunction
+from utils import *
 
 
 class Layer:
@@ -65,7 +65,7 @@ class MNISTNeuralNetwork(object):
 
                 if (i / batch_size) % log_interval == 0:
                     accuracy = self.evaluate(1000)
-                    accumulated_err += self.calculate_error(output, batch_labels)
+                    accumulated_err += calculate_error(output, batch_labels)
                     average_error = accumulated_err / ((i // batch_size) + 1)
                     print("Epoch: {} | Iteration: {:<5} | Accuracy: {:<5} | Error: {:<10.5f}"
                           .format(epoch, i, accuracy, average_error))
@@ -73,13 +73,13 @@ class MNISTNeuralNetwork(object):
             learning_rate *= decay_rate
 
     def backward_propagation(self, output, batch_labels, total_samples):
-        delta_output = output - self.one_hot(batch_labels)
+        delta_output = output - one_hot(batch_labels)
 
         for i in range(self.num_of_layers - 1, 0, -1):
             a_prev = self.layers[i - 1].activation_function.function(self.layers[i - 1].z)
 
             delta_weights = 1 / total_samples * np.dot(delta_output, a_prev.T)
-            delta_biases = 1 / total_samples * np.sum(delta_output)  # axis=1, keepdims=True
+            delta_biases = 1 / total_samples * np.sum(delta_output)
 
             delta_output = (np.dot(self.layers[i].weights.T, delta_output) *
                             self.layers[i - 1].activation_function.derivative(self.layers[i - 1].z))
@@ -108,27 +108,8 @@ class MNISTNeuralNetwork(object):
             test_labels = test_labels[indices]
 
         output = self.forward_propagation(test_inputs)
-        prediction = self.get_predictions(output)
-        return self.get_accuracy(prediction, test_labels)
-
-    def calculate_error(self, output, labels):
-        epsilon = 1e-15
-
-        error = -1 / labels.size * np.sum(self.one_hot(labels) * np.log(output + epsilon))
-        return error
-
-    @staticmethod
-    def one_hot(labels: np.ndarray) -> np.ndarray:
-        one_hot_labels = np.eye(10)[labels].T
-        return one_hot_labels
-
-    @staticmethod
-    def get_predictions(output):
-        return np.argmax(output, 0)
-
-    @staticmethod
-    def get_accuracy(predictions, batch_labels):
-        return np.sum(predictions == batch_labels) / batch_labels.size
+        prediction = get_predictions(output)
+        return get_accuracy(prediction, test_labels)
 
     @classmethod
     def save_model(cls, model, path):
