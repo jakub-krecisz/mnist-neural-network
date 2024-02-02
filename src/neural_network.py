@@ -156,7 +156,7 @@ class MNISTNeuralNetwork(object):
                     biases = next(reader)[1:]
 
                     weights_formatted = np.array(list(map(float, weights))).reshape((num_neurons, layers[-1].num_neurons)) if weights != ['-'] else None
-                    biases_formatted = np.array(list(map(float, biases))) if biases != ['-'] else None
+                    biases_formatted = np.array(list(map(float, biases))).reshape((num_neurons, 1)) if biases != ['-'] else None
 
                     current_layer = Layer(num_neurons, function)
                     current_layer.biases = biases_formatted
