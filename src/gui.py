@@ -7,7 +7,7 @@ from neural_network import MNISTNeuralNetwork
 
 
 class MNISTGui(object):
-    DEFAULT_PEN_SIZE = 30.0
+    DEFAULT_PEN_SIZE = 25.0
     DEFAULT_COLOR = 'black'
 
     def __init__(self, model: MNISTNeuralNetwork):
@@ -58,7 +58,7 @@ class MNISTGui(object):
 
         self.prediction_label.config(state='normal')
         self.prediction_label.delete(1.0, "end")
-        self.prediction_label.insert("end", f"This is a {prediction}", "center")
+        self.prediction_label.insert("end", f"Predicted value: {prediction}", "center")
         self.prediction_label.config(state='disabled')
 
     def get_image_from_canvas(self):
