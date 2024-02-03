@@ -65,7 +65,8 @@ def _linear_derivative(x):
 
 def _softmax(x):
     """The Softmax activation function."""
-    return np.exp(x) / sum(np.exp(x))
+    exp_x = np.exp(x - np.max(x))
+    return exp_x / sum(exp_x)
 
 def _softmax_derivative(x):
     """The derivative of the Softmax function."""
