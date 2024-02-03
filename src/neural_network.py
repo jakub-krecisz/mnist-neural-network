@@ -1,6 +1,7 @@
 import csv
 
 from typing import List
+from matplotlib import pyplot as plt
 from data_loader import MNISTDataLoader
 from activations import ActivationFunction
 from utils import *
@@ -66,7 +67,7 @@ class MNISTNeuralNetwork(object):
                 if (i / batch_size) % log_interval == 0:
                     accuracy = self.evaluate(1000)
                     accumulated_err += calculate_error(output, batch_labels)
-                    average_error = accumulated_err / ((i // batch_size) + 1)
+                    average_error = accumulated_err / ((i // batch_size) + 1) * (epoch + 1)
                     print("Epoch: {} | Iteration: {:<5} | Accuracy: {:<5} | Error: {:<10.5f}"
                           .format(epoch, i, accuracy, average_error))
 
@@ -110,6 +111,18 @@ class MNISTNeuralNetwork(object):
         output = self.forward_propagation(test_inputs)
         prediction = get_predictions(output)
         return get_accuracy(prediction, test_labels)
+
+    def predict(self, input_data: np.ndarray, actual_label: int, plot=False):
+        output = self.forward_propagation(input_data[np.newaxis, ...])
+        prediction = get_predictions(output)[0]
+
+        if plot:
+            plt.gray()
+            plt.imshow(input_data, interpolation='nearest')
+
+            plt.title(f"Prediction: {prediction}, Actual Label: {actual_label}")
+            plt.show()
+        return prediction
 
     @classmethod
     def save_model(cls, model, path):
