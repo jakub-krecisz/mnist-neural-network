@@ -108,12 +108,28 @@ class MNISTDataLoader:
 
         :param mean: Mean value for normalization.
         :param std: Standard deviation value for normalization.
+        :raises ValueError: If train and test datasets are not initialized.
         """
         if self.train_dataset is not None and self.test_dataset is not None:
             self.train_dataset.normalize(mean=mean, std=std)
             self.test_dataset.normalize(mean=mean, std=std)
         else:
             raise ValueError("Train and test datasets are not initialized. Use load_mnist_data() firstly.")
+
+    def get_sample(self) -> Tuple[np.ndarray, int]:
+        """
+        Get a random sample from the test dataset.
+
+        :return: Tuple containing a random input and its corresponding label.
+        :raises ValueError: If train and test datasets are not initialized.
+        """
+        if self.test_dataset is not None:
+            random_index = np.random.randint(0, len(self.test_dataset))
+            random_input = self.test_dataset.inputs[random_index]
+            corresponding_label = self.test_dataset.labels[random_index]
+            return random_input, corresponding_label
+        else:
+            raise ValueError("Test dataset is not initialized. Use load_mnist_data() firstly.")
 
 
 class Dataset:
