@@ -112,7 +112,7 @@ class MNISTNeuralNetwork(object):
         prediction = get_predictions(output)
         return get_accuracy(prediction, test_labels)
 
-    def predict(self, input_data: np.ndarray, actual_label: int, plot=False):
+    def predict(self, input_data: np.ndarray, actual_label: int, plot=False, get_scores=False):
         output = self.forward_propagation(input_data[np.newaxis, ...])
         prediction = get_predictions(output)[0]
 
@@ -122,7 +122,7 @@ class MNISTNeuralNetwork(object):
 
             plt.title(f"Prediction: {prediction}, Actual Label: {actual_label}")
             plt.show()
-        return prediction
+        return (prediction, output) if get_scores else prediction
 
     @classmethod
     def save_model(cls, model, path):
