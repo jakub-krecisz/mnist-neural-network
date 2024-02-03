@@ -7,6 +7,7 @@
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Demo](#demo)
 
 
 ## Overview
@@ -81,3 +82,8 @@ To save a trained model, use:
 ```python
 MNISTNeuralNetwork.save_model(model, 'file_path/filename.csv')
 ```
+
+## Demo
+<p align="center">
+  <img src="https://github.com/jakub-krecisz/mnist-neural-network/assets/93099511/32d8d53c-b043-4862-aeb3-2e02870b95d9" alt="demo_mnist" width="400">
+</p>
