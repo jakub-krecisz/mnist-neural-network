@@ -94,6 +94,9 @@ class MNISTDataLoader:
             train_df = self.train_dataset.to_dataframe()
             test_df = self.test_dataset.to_dataframe()
 
+            os.makedirs(self._train_path, exist_ok=True)
+            os.makedirs(self._test_path, exist_ok=True)
+
             train_filepath = os.path.join(self._train_path, self._train_filename)
             test_filepath = os.path.join(self._test_path, self._test_filename)
 
