@@ -1,6 +1,6 @@
 import csv
 
-from typing import List
+from typing import List, Optional
 from matplotlib import pyplot as plt
 from data_loader import MNISTDataLoader
 from activations import ActivationFunction
@@ -64,10 +64,10 @@ class MNISTNeuralNetwork(object):
                 self.backward_propagation(output, batch_labels, len(batch_inputs))
                 self.update_weights_and_biases(learning_rate)
 
-                if (i / batch_size) % log_interval == 0:
+                if (i / batch_size) % log_interval == 0 and i > 0:
                     accuracy = self.evaluate(1000)
                     accumulated_err += calculate_error(output, batch_labels)
-                    average_error = accumulated_err / ((i // batch_size) + 1) * (epoch + 1)
+                    average_error = accumulated_err / ((i // batch_size) + 1)
                     print("Epoch: {} | Iteration: {:<5} | Accuracy: {:<5} | Error: {:<10.5f}"
                           .format(epoch, i, accuracy, average_error))
 
@@ -112,16 +112,16 @@ class MNISTNeuralNetwork(object):
         prediction = get_predictions(output)
         return get_accuracy(prediction, test_labels)
 
-    def predict(self, input_data: np.ndarray, actual_label: int, plot=False, get_scores=False):
+    def predict(self, input_data: np.ndarray, actual_label: Optional[int] = None, plot=False, get_scores=False):
         output = self.forward_propagation(input_data[np.newaxis, ...])
         prediction = get_predictions(output)[0]
 
         if plot:
             plt.gray()
             plt.imshow(input_data, interpolation='nearest')
-
-            plt.title(f"Prediction: {prediction}, Actual Label: {actual_label}")
+            plt.title(f"Prediction: {prediction}" + (f", Actual Label: {actual_label}" if actual_label else ""))
             plt.show()
+
         return (prediction, output) if get_scores else prediction
 
     @classmethod
